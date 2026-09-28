@@ -1,0 +1,69 @@
+// Все допущения помощника в одном месте. Игра формулу боя не раскрывает, поэтому эти числа —
+// настройки, а не замеры. Меняются только здесь; эталонные разборы владельца (tools/golden-report.mjs)
+// показывают, куда их крутить.
+
+export const SITUATIONS = ['pvp', 'attack_buildings', 'attack_bases', 'defend_buildings', 'pve'];
+
+// Сколько времени игрок каждой роли проводит в каждой ситуации.
+export const ROLE_WEIGHTS = {
+  attack:  { pvp: 0.45, attack_buildings: 0.2, attack_bases: 0.1, defend_buildings: 0.05, pve: 0.2 },
+  defense: { pvp: 0.3, attack_buildings: 0.05, attack_bases: 0, defend_buildings: 0.5, pve: 0.15 },
+  bases:   { pvp: 0.3, attack_buildings: 0, attack_bases: 0.6, defend_buildings: 0, pve: 0.1 },
+  hold:    { pvp: 0.4, attack_buildings: 0.1, attack_bases: 0, defend_buildings: 0.45, pve: 0.05 },
+  siege:   { pvp: 0.3, attack_buildings: 0.6, attack_bases: 0, defend_buildings: 0, pve: 0.1 },
+  farm:    { pvp: 0.2, attack_buildings: 0.1, attack_bases: 0, defend_buildings: 0.1, pve: 0.6 },
+};
+
+// Насколько в ситуации важна живучесть (степень множителя выживания).
+export const SURVIVAL_POWER = { pvp: 1, attack_buildings: 0.7, attack_bases: 0.7, defend_buildings: 1.2, pve: 0.3 };
+// Насколько живучесть важна самой роли: атакующему щит нужен меньше, чем защитнику
+// (подстроено по разборам владельца: в атаке она берёт урон, а не щиты).
+export const ROLE_SURVIVAL = { attack: 0.55, bases: 0.55, siege: 0.55, farm: 0.3, defense: 1.2, hold: 1 };
+// Доля входящего урона от обычных атак и от навыков.
+export const INCOMING_SHARE = { normal: 0.6, skill: 0.4 };
+export const MAX_REDUCTION = 0.9;
+// Вес обычных атак в уроне за раунд относительно Атаки. В игре «Потрошитель» по цифрам втрое
+// сильнее «Грязных когтей» — значит, обычные атаки дают меньшую долю урона, чем удары навыками.
+export const NORMAL_ATTACK_FACTOR = 0.4;
+export const STRIKE_EVERY = 5;        // навыки удара срабатывают раз в 5 раундов (скриншоты)
+export const CAPACITY_POWER = 1.75;   // сила отряда ≈ k × N^1,75 (замеры, база знаний)
+
+// Каркас пятёрки по донату, если игрок выбрал «реши сам» (принцип 1 владельца): [мин, макс].
+export const DEFAULT_COMPOSITION = {
+  none:  { SSR: [1, 1], SR: [2, 3], R: [1, 2] },
+  small: { SSR: [1, 1], SR: [1, 3], R: [1, 3] },
+  big:   { SSR: [2, 2], SR: [1, 1], R: [2, 2] },
+};
+
+// К какому уровню игрок примерно дотянет Двойника пятёрки — только для сравнения пятёрок.
+export const PROJECTED_LEVEL = {
+  none:  { SSR: 80, SR: 90, R: 75 },
+  small: { SSR: 95, SR: 95, R: 75 },
+  big:   { SSR: 115, SR: 100, R: 80 },
+};
+
+// Сколько общих осколков приходит в день (оценка; уточнить у владельца).
+export const DAILY_UNIVERSAL = {
+  none:  { R: 30, SR: 15, SSR: 5 },
+  small: { R: 60, SR: 30, SSR: 15 },
+  big:   { R: 120, SR: 60, SSR: 40 },
+};
+
+export const ROUND_DAYS = 14;
+// Свои осколки до конца раунда: лампы со временем добываются тяжелее, а донатеры жмут призыв
+// в первые дни (владелец, 28.09.2026). Поэтому остаток — не больше этой доли от уже накопленного,
+// и чем меньше дней осталось, тем меньше.
+export const NAMED_FUTURE_SHARE = 0.5;
+// Принцип 7 владельца: полезный навык не обгоняет другой полезный навык того же Двойника
+// больше чем на столько уровней (R — круг с лепестком, SR — почти круг, SSR — 2–4 лепестка).
+export const MAX_LEAD = { R: 7, SR: 5, SSR: 4, UR: 0 };
+// Навык «полезен» роли, если работает в ситуациях, где роль проводит хотя бы такую долю времени.
+export const USEFUL_COVERAGE = 0.3;
+// Порядок и отрыв навыков считаются на «учебном» запасе своих осколков у каждого Двойника
+// (примерно до синего цвета на всех навыках), чтобы порядок был виден и при пустом кармане.
+export const ORDER_SHARDS = 3500;
+export const SLOT_OPEN_LEVEL = [1, 40, 60];     // 2-й навык — Вознесение IV, 3-й — VI
+export const QUICK_SKILL_LEVEL = { none: 8, small: 12, big: 18 };
+export const SHORTLIST = 25;          // сколько пятёрок считать подробно после быстрого отбора
+export const KEEP_MARGIN = 0.05;      // новая пятёрка должна быть сильнее прежней хотя бы на 5 %
+export const RUNNER_UP_MARGIN = 0.03; // запасной вариант — если уступает не больше 3 %

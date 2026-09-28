@@ -1,0 +1,13 @@
+{
+ "cofferWeekly": {
+  "R": 500,
+  "SR": 200,
+  "SSR": 100
+ },
+ "cofferAmethyst": {
+  "R": 10,
+  "SR": 30,
+  "SSR": 80
+ },
+ "roundWeeks": 2
+}

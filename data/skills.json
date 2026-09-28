@@ -1,0 +1,310 @@
+{
+ "blockPrice": [
+  50,
+  60,
+  70,
+  80,
+  100,
+  200
+ ],
+ "gainByRarity": {
+  "R": [
+   40,
+   48,
+   56,
+   64,
+   72,
+   80
+  ],
+  "SR": [
+   100,
+   120,
+   140,
+   160,
+   180,
+   200
+  ],
+  "SSR": [
+   200,
+   240,
+   280,
+   320,
+   360,
+   400
+  ]
+ },
+ "damageBase": {
+  "R": 150,
+  "SR": 200,
+  "SSR": 240
+ },
+ "damageStep": {
+  "R": 5,
+  "SR": 10,
+  "SSR": 15
+ },
+ "stepX2": [
+  7,
+  13,
+  19
+ ],
+ "stepX3": [
+  25,
+  31,
+  36
+ ],
+ "maxLevel": 36,
+ "names": {
+  "cursed_echoes": "Проклятое эхо",
+  "unholy_claws": "Грязные когти",
+  "twisted_ripper": "Потрошитель",
+  "sanguine_bulwark": "Духовный бастион",
+  "arcane_shell": "Иной щит",
+  "growing_legion": "Растущий легион",
+  "meteor_barrage": "Дождь смерти",
+  "profane_claim": "Жесткий захват",
+  "doomfall": "Небесный рок",
+  "unnatural_hatred": "Черная ненависть",
+  "blood_ward": "Кровавая защита",
+  "vein_reaper": "Душегуб",
+  "vein_ripper": "Душегуб (второй вариант)",
+  "shared_tribute": "Общее процветание",
+  "hot_pursuit": "Воин сумерек",
+  "crimson_barrage": "Алый залп"
+ },
+ "catalog": {
+  "cursed_echoes": {
+   "kind": "strike",
+   "target": "self",
+   "when": [
+    "pvp",
+    "attack_buildings",
+    "attack_bases",
+    "defend_buildings",
+    "pve"
+   ],
+   "exact": true,
+   "text": "удар {v} % от своей Атаки раз в 5 раундов"
+  },
+  "meteor_barrage": {
+   "kind": "strike",
+   "target": "self",
+   "when": [
+    "attack_buildings"
+   ],
+   "exact": true,
+   "text": "удар {v} % раз в 5 раундов — только при атаке крепости, маяка, форта"
+  },
+  "doomfall": {
+   "kind": "strike",
+   "target": "self",
+   "when": [
+    "attack_bases"
+   ],
+   "exact": true,
+   "text": "удар {v} % раз в 5 раундов — только при атаке базы игрока"
+  },
+  "blood_ward": {
+   "kind": "strike",
+   "target": "self",
+   "when": [
+    "defend_buildings"
+   ],
+   "exact": true,
+   "text": "удар {v} % раз в 5 раундов — только при защите базы, крепости, маяка, форта"
+  },
+  "crimson_barrage": {
+   "kind": "strike",
+   "target": "self",
+   "when": [
+    "pve"
+   ],
+   "exact": false,
+   "text": "удар {v} % раз в 5 раундов — только по монстрам"
+  },
+  "twisted_ripper": {
+   "kind": "normal_dmg",
+   "target": "squad",
+   "when": [
+    "pvp",
+    "attack_buildings",
+    "attack_bases",
+    "defend_buildings",
+    "pve"
+   ],
+   "exact": true,
+   "base": {
+    "R": 8,
+    "SR": 10,
+    "SSR": 12
+   },
+   "step": {
+    "R": 1,
+    "SR": 2,
+    "SSR": 3
+   },
+   "text": "урон обычных атак всего отряда +{v} %"
+  },
+  "unholy_claws": {
+   "kind": "skill_dmg",
+   "target": "squad",
+   "when": [
+    "pvp",
+    "attack_buildings",
+    "attack_bases",
+    "defend_buildings",
+    "pve"
+   ],
+   "exact": true,
+   "base": {
+    "R": 3.2,
+    "SR": 4.0,
+    "SSR": 4.8
+   },
+   "step": {
+    "R": 0.3,
+    "SR": 0.6,
+    "SSR": 0.9
+   },
+   "text": "урон навыков всего отряда +{v} %"
+  },
+  "sanguine_bulwark": {
+   "kind": "normal_red",
+   "target": "squad",
+   "when": [
+    "pvp",
+    "attack_buildings",
+    "attack_bases",
+    "defend_buildings",
+    "pve"
+   ],
+   "exact": true,
+   "base": {
+    "R": 5,
+    "SR": 10,
+    "SSR": 15
+   },
+   "step": {
+    "R": 1,
+    "SR": 2,
+    "SSR": 3
+   },
+   "text": "урон от обычных атак по отряду −{v} %"
+  },
+  "arcane_shell": {
+   "kind": "skill_red",
+   "target": "squad",
+   "when": [
+    "pvp",
+    "attack_buildings",
+    "attack_bases",
+    "defend_buildings",
+    "pve"
+   ],
+   "exact": false,
+   "base": {
+    "R": 3.2,
+    "SR": 4.0,
+    "SSR": 4.8
+   },
+   "step": {
+    "R": 0.3,
+    "SR": 0.6,
+    "SSR": 0.9
+   },
+   "text": "урон от навыков по отряду −{v} %"
+  },
+  "growing_legion": {
+   "kind": "capacity",
+   "target": "squad",
+   "when": [
+    "pvp",
+    "attack_buildings",
+    "attack_bases",
+    "defend_buildings",
+    "pve"
+   ],
+   "exact": false,
+   "base": {
+    "R": 0.5,
+    "SR": 1.0,
+    "SSR": 1.5
+   },
+   "step": {
+    "R": 0.01,
+    "SR": 0.02,
+    "SSR": 0.03
+   },
+   "text": "вместимость отряда +{v} %"
+  },
+  "unnatural_hatred": {
+   "kind": "vs_players",
+   "target": "squad",
+   "when": [
+    "pvp",
+    "attack_buildings",
+    "attack_bases",
+    "defend_buildings"
+   ],
+   "exact": false,
+   "base": {
+    "R": 1.7,
+    "SR": 2.6,
+    "SSR": 3.5
+   },
+   "step": {
+    "R": 0.3,
+    "SR": 0.6,
+    "SSR": 0.9
+   },
+   "text": "урон по отрядам игроков +{v} %"
+  },
+  "vein_ripper": {
+   "kind": "noncombat",
+   "target": "squad",
+   "when": [],
+   "exact": false,
+   "text": "эффект в игре не проверен — помощник его не учитывает"
+  },
+  "profane_claim": {
+   "kind": "vs_defenders",
+   "target": "squad",
+   "when": [
+    "attack_buildings"
+   ],
+   "exact": false,
+   "base": {
+    "R": 7.5,
+    "SR": 15,
+    "SSR": 22.5
+   },
+   "step": {
+    "R": 1,
+    "SR": 2,
+    "SSR": 3
+   },
+   "text": "урон по защитникам строений +{v} %"
+  },
+  "vein_reaper": {
+   "kind": "noncombat",
+   "target": "squad",
+   "when": [],
+   "exact": false,
+   "text": "скорость сбора — в бою не помогает"
+  },
+  "hot_pursuit": {
+   "kind": "noncombat",
+   "target": "squad",
+   "when": [],
+   "exact": false,
+   "text": "скорость марша — в бою не помогает"
+  },
+  "shared_tribute": {
+   "kind": "noncombat",
+   "target": "player",
+   "when": [],
+   "exact": false,
+   "text": "монеты ковена за помощь в стройке — в бою не помогает"
+  }
+ }
+}

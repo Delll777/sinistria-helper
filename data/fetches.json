@@ -1,0 +1,340 @@
+[
+ {
+  "id": "astravor",
+  "nameRu": "Астравор",
+  "rarity": "UR",
+  "type": "wicked",
+  "skills": [
+   "cursed_echoes",
+   "unholy_claws",
+   "sanguine_bulwark"
+  ],
+  "direction": "skills"
+ },
+ {
+  "id": "orion",
+  "nameRu": "Орион",
+  "rarity": "UR",
+  "type": "vigilant",
+  "skills": [
+   "cursed_echoes",
+   "twisted_ripper",
+   "arcane_shell"
+  ],
+  "direction": "auto"
+ },
+ {
+  "id": "zethria",
+  "nameRu": "Зетрия",
+  "rarity": "UR",
+  "type": "mimic",
+  "skills": [
+   "cursed_echoes",
+   "growing_legion",
+   "unnatural_hatred"
+  ],
+  "direction": "universal"
+ },
+ {
+  "id": "candace",
+  "nameRu": "Кэндес",
+  "rarity": "SSR",
+  "type": "wicked",
+  "skills": [
+   "cursed_echoes",
+   "meteor_barrage",
+   "unnatural_hatred"
+  ],
+  "direction": null
+ },
+ {
+  "id": "charlemagne",
+  "nameRu": "Чарльз",
+  "rarity": "SSR",
+  "type": "hunter",
+  "skills": [
+   "cursed_echoes",
+   "growing_legion",
+   "twisted_ripper"
+  ],
+  "direction": null
+ },
+ {
+  "id": "erik",
+  "nameRu": "Эрик",
+  "rarity": "SSR",
+  "type": "vigilant",
+  "skills": [
+   "cursed_echoes",
+   "sanguine_bulwark",
+   "unholy_claws"
+  ],
+  "direction": null
+ },
+ {
+  "id": "gilgamesh",
+  "nameRu": "Гильгамеш",
+  "rarity": "SSR",
+  "type": "mimic",
+  "skills": [
+   "cursed_echoes",
+   "arcane_shell",
+   "blood_ward"
+  ],
+  "direction": null
+ },
+ {
+  "id": "alastair",
+  "nameRu": "Аластар",
+  "rarity": "SR",
+  "type": "mimic",
+  "skills": [
+   "cursed_echoes",
+   "shared_tribute",
+   "growing_legion"
+  ],
+  "direction": null
+ },
+ {
+  "id": "carmilla",
+  "nameRu": "Кармилла",
+  "rarity": "SR",
+  "type": "hunter",
+  "skills": [
+   "cursed_echoes",
+   "unholy_claws",
+   "doomfall"
+  ],
+  "direction": null
+ },
+ {
+  "id": "cornelius",
+  "nameRu": "Корнелиус",
+  "rarity": "SR",
+  "type": "vigilant",
+  "skills": [
+   "cursed_echoes",
+   "meteor_barrage",
+   "profane_claim"
+  ],
+  "direction": null
+ },
+ {
+  "id": "franco",
+  "nameRu": "Франко",
+  "rarity": "SR",
+  "type": "wicked",
+  "skills": [
+   "cursed_echoes",
+   "blood_ward",
+   "growing_legion"
+  ],
+  "direction": null
+ },
+ {
+  "id": "hans",
+  "nameRu": "Ганс",
+  "rarity": "SR",
+  "type": "mimic",
+  "skills": [
+   "cursed_echoes",
+   "vein_ripper",
+   "unnatural_hatred"
+  ],
+  "direction": null
+ },
+ {
+  "id": "harker",
+  "nameRu": "Харкер",
+  "rarity": "SR",
+  "type": "vigilant",
+  "skills": [
+   "cursed_echoes",
+   "sanguine_bulwark",
+   "arcane_shell"
+  ],
+  "direction": null
+ },
+ {
+  "id": "john",
+  "nameRu": "Джон",
+  "rarity": "SR",
+  "type": "wicked",
+  "skills": [
+   "cursed_echoes",
+   "vein_reaper",
+   "sanguine_bulwark"
+  ],
+  "direction": null
+ },
+ {
+  "id": "lorenzo",
+  "nameRu": "Лоуренс",
+  "rarity": "SR",
+  "type": "hunter",
+  "skills": [
+   "cursed_echoes",
+   "hot_pursuit",
+   "twisted_ripper"
+  ],
+  "direction": null
+ },
+ {
+  "id": "morien",
+  "nameRu": "Мориен",
+  "rarity": "SR",
+  "type": "vigilant",
+  "skills": [
+   "cursed_echoes",
+   "doomfall",
+   "unnatural_hatred"
+  ],
+  "direction": null
+ },
+ {
+  "id": "nostradamus",
+  "nameRu": "Нострадамус",
+  "rarity": "SR",
+  "type": "hunter",
+  "skills": [
+   "cursed_echoes",
+   "crimson_barrage",
+   "unholy_claws"
+  ],
+  "direction": null
+ },
+ {
+  "id": "piper",
+  "nameRu": "Пайпер",
+  "rarity": "SR",
+  "type": "mimic",
+  "skills": [
+   "cursed_echoes",
+   "vein_ripper",
+   "twisted_ripper"
+  ],
+  "direction": null
+ },
+ {
+  "id": "vicente",
+  "nameRu": "Висент",
+  "rarity": "SR",
+  "type": "wicked",
+  "skills": [
+   "cursed_echoes",
+   "arcane_shell",
+   "profane_claim"
+  ],
+  "direction": null
+ },
+ {
+  "id": "asra",
+  "nameRu": "Асра",
+  "rarity": "R",
+  "type": "hunter",
+  "skills": [
+   "cursed_echoes",
+   "twisted_ripper"
+  ],
+  "direction": null
+ },
+ {
+  "id": "drusilla",
+  "nameRu": "Друзилла",
+  "rarity": "R",
+  "type": "wicked",
+  "skills": [
+   "cursed_echoes",
+   "hot_pursuit"
+  ],
+  "direction": null
+ },
+ {
+  "id": "edward",
+  "nameRu": "Эдвард",
+  "rarity": "R",
+  "type": "hunter",
+  "skills": [
+   "cursed_echoes",
+   "vein_reaper"
+  ],
+  "direction": null
+ },
+ {
+  "id": "lucian",
+  "nameRu": "Люциан",
+  "rarity": "R",
+  "type": "mimic",
+  "skills": [
+   "cursed_echoes",
+   "vein_reaper"
+  ],
+  "direction": null
+ },
+ {
+  "id": "mortimer",
+  "nameRu": "Мортимер",
+  "rarity": "R",
+  "type": "mimic",
+  "skills": [
+   "cursed_echoes",
+   "hot_pursuit"
+  ],
+  "direction": null
+ },
+ {
+  "id": "nikolai",
+  "nameRu": "Никола",
+  "rarity": "R",
+  "type": "wicked",
+  "skills": [
+   "cursed_echoes",
+   "unholy_claws"
+  ],
+  "direction": null
+ },
+ {
+  "id": "rollo",
+  "nameRu": "Ролло",
+  "rarity": "R",
+  "type": "wicked",
+  "skills": [
+   "cursed_echoes",
+   "vein_reaper"
+  ],
+  "direction": null
+ },
+ {
+  "id": "saber",
+  "nameRu": "Сейбер",
+  "rarity": "R",
+  "type": "vigilant",
+  "skills": [
+   "cursed_echoes",
+   "vein_reaper"
+  ],
+  "direction": null
+ },
+ {
+  "id": "sarasvati",
+  "nameRu": "Сарасвати",
+  "rarity": "R",
+  "type": "hunter",
+  "skills": [
+   "cursed_echoes",
+   "vein_reaper"
+  ],
+  "direction": null
+ },
+ {
+  "id": "ulfred",
+  "nameRu": "Ульфред",
+  "rarity": "R",
+  "type": "vigilant",
+  "skills": [
+   "cursed_echoes",
+   "vein_reaper"
+  ],
+  "direction": null
+ }
+]

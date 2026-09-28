@@ -1,0 +1,665 @@
+[
+ {
+  "id": "output_bonus",
+  "name": "Бонус выработки",
+  "branch": "Ихор",
+  "maxLevel": 10,
+  "baseIchor": 2500,
+  "firstPrice": 275,
+  "ichorMul": [
+   1,
+   2.1
+  ],
+  "priceMul": [
+   6
+  ],
+  "effectStep": 2,
+  "effectOffset": 0,
+  "effectTemplate": "выработка ихора +{v} %",
+  "complete": false
+ },
+ {
+  "id": "refinery_bonus",
+  "name": "Бонус плавильни",
+  "branch": "Ихор",
+  "maxLevel": 5,
+  "baseIchor": 200,
+  "firstPrice": 24,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 5,
+  "effectOffset": 0,
+  "effectTemplate": "расход ихора на Плавильни −{v} %",
+  "complete": true
+ },
+ {
+  "id": "build_effect",
+  "name": "Эффект стройки",
+  "branch": "Ихор",
+  "maxLevel": 5,
+  "baseIchor": 3500,
+  "firstPrice": 420,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 2,
+  "effectOffset": 0,
+  "effectTemplate": "расход янтаря на Плавильни −{v} %",
+  "complete": true
+ },
+ {
+  "id": "arcanum_cost",
+  "name": "Расход в Аркануме",
+  "branch": "Ихор",
+  "maxLevel": 5,
+  "baseIchor": 2000,
+  "firstPrice": 240,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 3,
+  "effectOffset": 0,
+  "effectTemplate": "расход ихора в Аркануме −{v} %",
+  "complete": true
+ },
+ {
+  "id": "build_help",
+  "name": "Помощь стройки",
+  "branch": "Ковен",
+  "maxLevel": 5,
+  "baseIchor": 600,
+  "firstPrice": 72,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 1,
+  "effectOffset": 0,
+  "effectTemplate": "помощь в стройке {v}; монеты ковена за помощь +{v20} %",
+  "complete": true
+ },
+ {
+  "id": "donation_bonus",
+  "name": "Бонус взносов",
+  "branch": "Ковен",
+  "maxLevel": 5,
+  "baseIchor": 600,
+  "firstPrice": 72,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 5,
+  "effectOffset": 0,
+  "effectTemplate": "очки от взносов ковена +{v} %",
+  "complete": true
+ },
+ {
+  "id": "spell_bonus",
+  "name": "Бонус заклинания",
+  "branch": "Ковен",
+  "maxLevel": 5,
+  "baseIchor": 400,
+  "firstPrice": 48,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 10,
+  "effectOffset": 0,
+  "effectTemplate": "опыт и монеты от заклинаний +{v} %",
+  "complete": true
+ },
+ {
+  "id": "mausoleum_help_limit",
+  "name": "Лимит помощи в мавзолее",
+  "branch": "Ковен",
+  "maxLevel": 2,
+  "baseIchor": 800,
+  "firstPrice": 96,
+  "ichorMul": [
+   1,
+   2.5
+  ],
+  "priceMul": [
+   6
+  ],
+  "effectStep": 1,
+  "effectOffset": 0,
+  "effectTemplate": "лимит исходящей помощи {v}",
+  "complete": true
+ },
+ {
+  "id": "infirmary_help_effect",
+  "name": "Эффект помощи в лазарете",
+  "branch": "Ковен",
+  "maxLevel": 5,
+  "baseIchor": 6000,
+  "firstPrice": 72,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 5,
+  "effectOffset": 0,
+  "effectTemplate": "улучшение вашей помощи в Лазарете {v}",
+  "complete": true
+ },
+ {
+  "id": "infirmary_help_limit",
+  "name": "Лимит помощи в лазарете",
+  "branch": "Ковен",
+  "maxLevel": 6,
+  "baseIchor": 400,
+  "firstPrice": 48,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.0,
+   9.0
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "effectStep": 4,
+  "effectOffset": 0,
+  "effectTemplate": "лимит получения помощи в Лазарете {v}",
+  "complete": true
+ },
+ {
+  "id": "carrion_bonus",
+  "name": "Бонус падали",
+  "branch": "Гули",
+  "maxLevel": 6,
+  "baseIchor": 600,
+  "firstPrice": 72,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.0,
+   9.0
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "effectStep": 1,
+  "effectOffset": 0,
+  "effectTemplate": "призванных гулов в минуту {v}",
+  "complete": true
+ },
+ {
+  "id": "heal_speed",
+  "name": "Бонус скорости лечения",
+  "branch": "Гули",
+  "maxLevel": 6,
+  "baseIchor": 600,
+  "firstPrice": 72,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.0,
+   9.0
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "effectStep": 3,
+  "effectOffset": 2,
+  "effectTemplate": "лечение в Лазарете +{v} %",
+  "complete": true
+ },
+ {
+  "id": "loss_reduction",
+  "name": "Снижение потерь",
+  "branch": "Гули",
+  "maxLevel": 5,
+  "baseIchor": 2000,
+  "firstPrice": 240,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 2,
+  "effectOffset": 0,
+  "effectTemplate": "потери гулов −{v} %",
+  "complete": true
+ },
+ {
+  "id": "amber_limit",
+  "name": "Лимит янтаря",
+  "branch": "Сбор",
+  "maxLevel": 10,
+  "baseIchor": 800,
+  "firstPrice": 88,
+  "ichorMul": [
+   1,
+   2.1
+  ],
+  "priceMul": [
+   6
+  ],
+  "effectStep": 10,
+  "effectOffset": 0,
+  "effectTemplate": "нагрузка гулов +{v} %",
+  "complete": false
+ },
+ {
+  "id": "gather_speed",
+  "name": "Скорость сбора",
+  "branch": "Сбор",
+  "maxLevel": 5,
+  "baseIchor": 1200,
+  "firstPrice": 144,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 10,
+  "effectOffset": 0,
+  "effectTemplate": "скорость сбора +{v} %",
+  "complete": true
+ },
+ {
+  "id": "energy_regen",
+  "name": "Восстановление энергии",
+  "branch": "Энергия",
+  "maxLevel": 5,
+  "baseIchor": 500,
+  "firstPrice": 60,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 5,
+  "effectOffset": 0,
+  "effectTemplate": "восст. энергии +{v} %",
+  "complete": true
+ },
+ {
+  "id": "cheap_energy",
+  "name": "Дешевая энергия",
+  "branch": "Энергия",
+  "maxLevel": 5,
+  "baseIchor": 800,
+  "firstPrice": 96,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 5,
+  "effectOffset": 0,
+  "effectTemplate": "алмазов за энергию −{v} %",
+  "complete": true
+ },
+ {
+  "id": "teleport_effect",
+  "name": "Эффект телепортации",
+  "branch": "Марш",
+  "maxLevel": 5,
+  "baseIchor": 600,
+  "firstPrice": 72,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 5,
+  "effectOffset": 0,
+  "effectTemplate": "цена телепортации −{v} %",
+  "complete": true
+ },
+ {
+  "id": "march_speed",
+  "name": "Бонус скорости марша",
+  "branch": "Марш",
+  "maxLevel": 5,
+  "baseIchor": 1000,
+  "firstPrice": 120,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 10,
+  "effectOffset": 0,
+  "effectTemplate": "скорость марша +{v} %",
+  "complete": true
+ },
+ {
+  "id": "radar_effect",
+  "name": "Эффект радара",
+  "branch": "Радар",
+  "maxLevel": 5,
+  "baseIchor": 800,
+  "firstPrice": 96,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 5,
+  "effectOffset": 0,
+  "effectTemplate": "расход зарядов радара −{v}",
+  "complete": true
+ },
+ {
+  "id": "radar_rewards",
+  "name": "Бонус наград радара",
+  "branch": "Радар",
+  "maxLevel": 5,
+  "baseIchor": 2100,
+  "firstPrice": 252,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 8,
+  "effectOffset": 0,
+  "effectTemplate": "шанс доп. награды +{v} %",
+  "complete": true
+ },
+ {
+  "id": "incense_effect",
+  "name": "Эффект благовоний",
+  "branch": "Алтарь",
+  "maxLevel": 5,
+  "baseIchor": 3800,
+  "firstPrice": 456,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 2,
+  "effectOffset": 0,
+  "effectTemplate": "расход благовоний −{v} %",
+  "complete": true
+ },
+ {
+  "id": "pve_damage",
+  "name": "Бонус урона в PvE",
+  "branch": "Бой",
+  "maxLevel": 5,
+  "baseIchor": 1200,
+  "firstPrice": 144,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 5,
+  "effectOffset": 0,
+  "effectTemplate": "урон в PvE +{v} %",
+  "complete": true
+ },
+ {
+  "id": "pvp_damage",
+  "name": "Бонус урона в PvP",
+  "branch": "Бой",
+  "maxLevel": 5,
+  "baseIchor": 2000,
+  "firstPrice": 240,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 2,
+  "effectOffset": 0,
+  "effectTemplate": "урон по строениям +{v} %",
+  "complete": true
+ },
+ {
+  "id": "damage_reduction",
+  "name": "Снижение урона",
+  "branch": "Бой",
+  "maxLevel": 5,
+  "baseIchor": 2000,
+  "firstPrice": 240,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 2,
+  "effectOffset": 0,
+  "effectTemplate": "урон от других игроков −{v} %",
+  "complete": true
+ },
+ {
+  "id": "rally_attack",
+  "name": "Бонус атаки отряда",
+  "branch": "Бой",
+  "maxLevel": 5,
+  "baseIchor": 2000,
+  "firstPrice": 240,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 1,
+  "effectOffset": 0,
+  "effectTemplate": "атака ралли +{v} %",
+  "complete": true
+ },
+ {
+  "id": "rally_defense",
+  "name": "Бонус защиты отряда",
+  "branch": "Бой",
+  "maxLevel": 5,
+  "baseIchor": 2000,
+  "firstPrice": 240,
+  "ichorMul": [
+   1,
+   2.2,
+   3.6,
+   5.2,
+   7.2
+  ],
+  "priceMul": [
+   6,
+   7,
+   8,
+   10
+  ],
+  "effectStep": 1,
+  "effectOffset": 0,
+  "effectTemplate": "защита ралли +{v} %",
+  "complete": true
+ }
+]

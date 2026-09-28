@@ -1,0 +1,154 @@
+[
+ {
+  "n": 1,
+  "cap": 20,
+  "command": null,
+  "coffers": 25,
+  "cofferExact": false,
+  "unlocksSkill": 1
+ },
+ {
+  "n": 2,
+  "cap": 30,
+  "command": 550,
+  "coffers": 50,
+  "cofferExact": true,
+  "unlocksSkill": null
+ },
+ {
+  "n": 3,
+  "cap": 40,
+  "command": null,
+  "coffers": 125,
+  "cofferExact": false,
+  "unlocksSkill": null
+ },
+ {
+  "n": 4,
+  "cap": 50,
+  "command": 2000,
+  "coffers": 200,
+  "cofferExact": true,
+  "unlocksSkill": 2
+ },
+ {
+  "n": 5,
+  "cap": 60,
+  "command": null,
+  "coffers": 280,
+  "cofferExact": false,
+  "unlocksSkill": null
+ },
+ {
+  "n": 6,
+  "cap": 70,
+  "command": null,
+  "coffers": 360,
+  "cofferExact": false,
+  "unlocksSkill": 3
+ },
+ {
+  "n": 7,
+  "cap": 80,
+  "command": null,
+  "coffers": 440,
+  "cofferExact": false,
+  "unlocksSkill": null
+ },
+ {
+  "n": 8,
+  "cap": 85,
+  "command": null,
+  "coffers": 520,
+  "cofferExact": false,
+  "unlocksSkill": null
+ },
+ {
+  "n": 9,
+  "cap": 90,
+  "command": 6000,
+  "coffers": 600,
+  "cofferExact": true,
+  "unlocksSkill": null
+ },
+ {
+  "n": 10,
+  "cap": 95,
+  "command": null,
+  "coffers": 720,
+  "cofferExact": false,
+  "unlocksSkill": null
+ },
+ {
+  "n": 11,
+  "cap": 100,
+  "command": null,
+  "coffers": 840,
+  "cofferExact": false,
+  "unlocksSkill": null
+ },
+ {
+  "n": 12,
+  "cap": 105,
+  "command": null,
+  "coffers": 960,
+  "cofferExact": false,
+  "unlocksSkill": null
+ },
+ {
+  "n": 13,
+  "cap": 110,
+  "command": null,
+  "coffers": 1080,
+  "cofferExact": false,
+  "unlocksSkill": null
+ },
+ {
+  "n": 14,
+  "cap": 115,
+  "command": 12000,
+  "coffers": 1200,
+  "cofferExact": true,
+  "unlocksSkill": null
+ },
+ {
+  "n": 15,
+  "cap": 120,
+  "command": null,
+  "coffers": 1320,
+  "cofferExact": false,
+  "unlocksSkill": null
+ },
+ {
+  "n": 16,
+  "cap": 125,
+  "command": null,
+  "coffers": 1440,
+  "cofferExact": false,
+  "unlocksSkill": null
+ },
+ {
+  "n": 17,
+  "cap": 130,
+  "command": null,
+  "coffers": 1560,
+  "cofferExact": false,
+  "unlocksSkill": null
+ },
+ {
+  "n": 18,
+  "cap": 135,
+  "command": null,
+  "coffers": 1680,
+  "cofferExact": false,
+  "unlocksSkill": null
+ },
+ {
+  "n": 19,
+  "cap": 140,
+  "command": null,
+  "coffers": 1800,
+  "cofferExact": false,
+  "unlocksSkill": null
+ }
+]
