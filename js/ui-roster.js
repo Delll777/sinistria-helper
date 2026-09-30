@@ -1,4 +1,5 @@
 import { h, mount, portrait, shardIcon, coinIcon, numberInput } from './ui-common.js';
+import { levelWarnings, levelWarningText } from './store.js';
 
 const ATTACK_HINT = 'Видно в окне «Повышение навыка»; помогает точнее решить, кому качать навык удара — он бьёт от Атаки самого Двойника.';
 
@@ -62,5 +63,21 @@ export function renderRoster(root, state, go, persist) {
     h('h3', {}, 'Ресурсы'), shards,
     h('label', { class: 'res' }, coinIcon(), 'Валюта талантов', numberInput(p.talentCoins, (v) => set(() => { p.talentCoins = v; }))),
     talentGrid,
-    h('button', { class: 'primary', onclick: () => go('think') }, 'Составить план'));
+    h('button', { class: 'primary', onclick: () => submit() }, 'Составить план'));
+
+  // Нереальные уровни для дня и доната — окно с предупреждением, но продолжить можно.
+  function submit() {
+    const list = levelWarnings(p, fetches);
+    if (list.length === 0) { go('think'); return; }
+    const close = () => overlay.remove();
+    const overlay = h('div', { class: 'modal-back' },
+      h('div', { class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'warn-title' },
+        h('h3', { id: 'warn-title' }, 'Проверьте уровни'),
+        h('p', {}, levelWarningText(list, p.quiz.donation, Number(p.day) || 1)),
+        h('div', { class: 'actions' },
+          h('button', { class: 'primary', onclick: close }, 'Исправить'),
+          h('button', { class: 'ghost', onclick: () => { close(); go('think'); } }, 'Всё верно, продолжить'))));
+    document.body.append(overlay);
+    overlay.querySelector('button').focus();
+  }
 }

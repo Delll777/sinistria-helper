@@ -87,3 +87,25 @@ export function remember(profile, plan) {
   if (!plan?.ok) return { ...profile, lastPlan: null };
   return { ...profile, lastPlan: { squad: [...plan.squadIds], at: new Date().toISOString() } };
 }
+
+// Правило владельца (01.10.2026): без доната или с малым донатом за первые 4 дня Синистрии нельзя
+// дотянуть SSR до 105 ур. и SR до 120 ур. Такие уровни — почти наверняка неверный день или донат.
+const EARLY_DAYS = 4;
+const EARLY_MAX = { SSR: 105, SR: 120 };
+
+export function levelWarnings(profile, fetches) {
+  const donation = profile.quiz?.donation;
+  const day = Number(profile.day) || 1;
+  if (!(donation === 'none' || donation === 'small') || day > EARLY_DAYS) return [];
+  const byId = Object.fromEntries(fetches.map((f) => [f.id, f]));
+  return Object.entries(profile.roster || {})
+    .filter(([id, o]) => o?.have && byId[id] && EARLY_MAX[byId[id].rarity] && Number(o.level) >= EARLY_MAX[byId[id].rarity])
+    .map(([id, o]) => ({ id, name: byId[id].nameRu, rarity: byId[id].rarity, level: Number(o.level) }));
+}
+
+export function levelWarningText(list, donation, day) {
+  const who = list.map((x) => `${x.name} — ${x.level} ур.`).join(', ');
+  const don = donation === 'small' ? 'с донатом до 10 000 ₽' : 'без доната';
+  return `${who} При игре ${don} на ${day}-й день Синистрии таких уровней достичь невозможно `
+    + '(SSR — от 105, SR — от 120). Проверьте, правильно ли указан день Синистрии и уровень доната в анкете.';
+}
