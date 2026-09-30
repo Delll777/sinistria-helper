@@ -110,7 +110,7 @@
    "when": [
     "defend_buildings"
    ],
-   "exact": true,
+   "exact": false,
    "text": "удар {v} % раз в 5 раундов — только при защите базы, крепости, маяка, форта"
   },
   "crimson_barrage": {
