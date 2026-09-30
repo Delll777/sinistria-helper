@@ -1,9 +1,9 @@
 import { h, mount } from './ui-common.js';
 import { countsOk } from './store.js';
 
-const QUESTIONS = [
+export const QUESTIONS = [
   { key: 'donation', title: 'Сколько планируете донатить в эту Синистрию?',
-    options: [['none', 'Не донатю'], ['small', 'Немного'], ['big', 'Больше 10 тысяч']] },
+    options: [['none', 'Не донатю'], ['small', 'Немного — до 10 000 ₽'], ['big', 'Много — от 10 000 ₽']] },
   { key: 'role', title: 'Чем хотите заниматься?',
     options: [['attack', 'Атаковать (авангард)'], ['defense', 'Защищать и держать щит (арьергард)'],
       ['bases', 'Нападать на базы игроков'], ['hold', 'Захватывать и держать мост или форт'],
