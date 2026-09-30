@@ -1,8 +1,6 @@
 import { h, mount, portrait } from './ui-common.js';
 import { empty } from './store.js';
 
-const REASON = { always: 'обязательно всем', economy: 'экономия ресурсов', path: 'открыть следующий ярус', combat: 'бой' };
-
 export function renderPlan(root, state, go, persist) {
   const plan = state.plan;
   const byId = Object.fromEntries(state.data.fetches.map((f) => [f.id, f]));
@@ -31,8 +29,6 @@ export function renderPlan(root, state, go, persist) {
   const uni = Object.entries(plan.universal).filter(([, n]) => n)
     .map(([r, n]) => h('li', {}, h('span', { class: `badge r-${r}` }, r), ` общие осколки — ${n}`));
 
-  const talents = plan.talents.steps.map((s) => h('li', { class: s.affordable ? '' : 'muted' },
-    `${s.name}: ${s.from} → ${s.to} · ${s.cost} валюты · ${REASON[s.reason]}${s.affordable ? '' : ' · пока не хватает'}`));
 
   mount(root, 
     h('h2', {}, 'Ваш план'),
@@ -42,9 +38,6 @@ export function renderPlan(root, state, go, persist) {
     h('h3', {}, 'Пятёрка'), typeLine, plan.squad.map(member),
     plan.runnerUp ? h('p', { class: 'muted' }, `Почти так же силён запасной вариант: ${plan.runnerUp.join(', ')}.`) : null,
     uni.length ? [h('h3', {}, 'Кому отдавать общие осколки'), h('ul', {}, uni)] : null,
-    h('h3', {}, 'Таланты'),
-    h('p', { class: 'muted' }, `Валюты сейчас: ${plan.talents.coins}. Хватает на ${plan.talents.affordableCount} шаг(ов) из ${plan.talents.steps.length}.`),
-    h('ol', { class: 'talents' }, talents),
     plan.untouched.length ? [h('h3', {}, 'Кого не трогать'),
       h('p', {}, plan.untouched.map((u) => u.name).join(', ')),
       h('p', { class: 'muted' }, 'Ресурсы в них — это ресурсы, которых не хватит пятёрке.')] : null,

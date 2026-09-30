@@ -4,7 +4,7 @@ import * as values from './skill-values.js';
 import { findSquad } from './squad.js';
 import { typeBonus } from './score.js';
 import { summarize, universalLeaders } from './allocate.js';
-import { talentPlan } from './talents-plan.js';
+// Таланты временно убраны из плана (владелец, 01.10.2026) — расчёт остаётся в talents-plan.js.
 import { gapLine, colorTo, slotName, shareOf, memberReasons, warnings, disclaimers } from './explain.js';
 
 export function initAll(data) {
@@ -88,10 +88,6 @@ export function buildPlan(profile, data) {
     .filter(([id, o]) => o?.have && byId[id] && !inSquad.has(id))
     .map(([id]) => ({ id, name: nameOf(id) }));
 
-  const tp = talentPlan({
-    talents: data.talents, tree: data.talent_tree, levels: profile.talents || {},
-    coins: profile.talentCoins || 0, donation: profile.quiz.donation, role,
-  });
 
   const membersNamed = result.members.map((m) => ({ ...m, name: nameOf(m.id) }));
   return {
@@ -109,8 +105,7 @@ export function buildPlan(profile, data) {
     now, squad,
     universal: Object.fromEntries(Object.entries(leaders).map(([r, id]) => [r, id ? nameOf(id) : null])),
     untouched,
-    talents: { ...tp, coins: profile.talentCoins || 0 },
     warnings: warnings(profile),
-    disclaimers: disclaimers({ members: membersNamed, roster: profile.roster, talentsPlan: tp, names }),
+    disclaimers: disclaimers({ members: membersNamed, roster: profile.roster, names }),
   };
 }

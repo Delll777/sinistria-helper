@@ -1,11 +1,11 @@
-import { h, mount, portrait, shardIcon, coinIcon, numberInput } from './ui-common.js';
+import { h, mount, portrait, shardIcon, numberInput } from './ui-common.js';
 import { levelWarnings, levelWarningText } from './store.js';
 
 const ATTACK_HINT = 'Видно в окне «Повышение навыка»; помогает точнее решить, кому качать навык удара — он бьёт от Атаки самого Двойника.';
 
 export function renderRoster(root, state, go, persist) {
   const p = state.profile;
-  const { fetches, talents, skills } = state.data;
+  const { fetches, skills } = state.data;
   const regular = fetches.filter((f) => f.rarity !== 'UR');
   const urs = fetches.filter((f) => f.rarity === 'UR');
   const set = (fn) => { fn(); persist(); };
@@ -50,19 +50,12 @@ export function renderRoster(root, state, go, persist) {
   const shards = h('div', { class: 'row wrap' }, ['R', 'SR', 'SSR'].map((r) => h('label', { class: 'res' },
     shardIcon(r), `Общие ${r}`, numberInput(p.universal[r], (v) => set(() => { p.universal[r] = v; })))));
 
-  const talentGrid = h('details', {},
-    h('summary', {}, 'Таланты (по желанию — помогут точнее посчитать путь)'),
-    h('div', { class: 'talents-in' }, talents.map((t) => h('label', {}, t.name,
-      numberInput(p.talents[t.id], (v) => set(() => { p.talents[t.id] = v; }), { max: t.maxLevel })))));
-
   mount(root, 
     h('h2', {}, 'Двойники и ресурсы'),
     h('label', { class: 'res' }, 'Какой сейчас день Синистрии? (от 1 до 14)', numberInput(p.day, (v) => set(() => { p.day = v; }), { min: 1, max: 14 })),
     h('h3', {}, 'Кто у вас есть'), h('p', { class: 'muted' }, 'Нажмите на портрет, чтобы отметить.'), grid, details,
     h('h3', {}, 'UR'), urBlock,
     h('h3', {}, 'Ресурсы'), shards,
-    h('label', { class: 'res' }, coinIcon(), 'Валюта талантов', numberInput(p.talentCoins, (v) => set(() => { p.talentCoins = v; }))),
-    talentGrid,
     h('button', { class: 'primary', onclick: () => submit() }, 'Составить план'));
 
   // Нереальные уровни для дня и доната — окно с предупреждением, но продолжить можно.
