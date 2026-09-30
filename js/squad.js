@@ -1,7 +1,7 @@
 // Выбор пятёрки: перебор всех составов из того, что есть у игрока, быстрый отбор,
 // затем подробный расчёт с распределением осколков. Шаблонов нет.
 import { DEFAULT_COMPOSITION, PROJECTED_LEVEL, DAILY_UNIVERSAL, ROUND_DAYS, SLOT_OPEN_LEVEL,
-  QUICK_SKILL_LEVEL, SHORTLIST, KEEP_MARGIN, RUNNER_UP_MARGIN, ORDER_SHARDS, NAMED_FUTURE_SHARE } from './weights.js';
+  QUICK_SKILL_LEVEL, SHORTLIST, KEEP_MARGIN, RUNNER_UP_MARGIN, ORDER_SHARDS, NAMED_FUTURE_SHARE, INVESTED_LEVEL } from './weights.js';
 import { allocate } from './allocate.js';
 import { squadScore } from './score.js';
 import { attackOf } from './attack.js';
@@ -113,6 +113,16 @@ export function findSquad(profile, fetches) {
   const slots = ur ? 4 : 5;
   const withUR = (rg) => (ur ? { ...rg, R: [Math.max(0, rg.R[0] - 1), rg.R[1]] } : rg);
   const ranges = withUR(compositionRanges(profile.quiz, 5));
+  // Прокачанные Двойники сверх каркаса: раздвигаем рамки их редкости, остальные — сжимаем. Возьмёт ли
+  // их помощник, решает оценка отряда.
+  const extra = Object.fromEntries(RARITIES.map((r) => [r, Math.max(0,
+    pool.filter((f) => f.rarity === r && (profile.roster[f.id]?.level || 1) >= INVESTED_LEVEL).length - ranges[r][1])]));
+  const extraTotal = RARITIES.reduce((sum, r) => sum + extra[r], 0);
+  if (extraTotal > 0) {
+    for (const r of RARITIES) {
+      ranges[r] = extra[r] > 0 ? [ranges[r][0], ranges[r][1] + extra[r]] : [Math.max(0, ranges[r][0] - extraTotal), ranges[r][1]];
+    }
+  }
   // Каких редкостей меньше, чем нужно по рамкам: сколько просили и сколько есть.
   const missing = RARITIES.map((r) => ({ rarity: r, need: ranges[r][0], have: pool.filter((f) => f.rarity === r).length }))
     .filter((x) => x.have < x.need);

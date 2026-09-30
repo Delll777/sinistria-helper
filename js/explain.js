@@ -1,7 +1,7 @@
 // Слова для плана: отрыв навыков языком игры, цвета звезды, причины и оговорки.
 import { squadScore } from './score.js';
 import { attackOf } from './attack.js';
-import { catalog, describe, isExact } from './skill-values.js';
+import { describe } from './skill-values.js';
 import { isUseful } from './allocate.js';
 
 export function plural(n, one, few, many) {
@@ -76,17 +76,12 @@ export function warnings(profile) {
 }
 
 export function disclaimers({ members, roster, talentsPlan, names }) {
-  const out = ['Точная формула боя в игре неизвестна — сравнение идёт «этот вариант сильнее того», без абсолютных цифр урона.'];
-  const approx = new Set();
-  for (const m of members) m.skills.forEach((id, i) => {
-    if (m.levels[i] >= 1 && catalog(id).kind !== 'noncombat' && !isExact(id)) approx.add(id);
-  });
-  if (approx.size) out.push(`Значения этих навыков примерные: ${[...approx].map((id) => names[id] || id).join(', ')}.`);
+  // Общие оговорки (формула боя, примерные навыки, доход осколков) владелец убрала 01.10.2026.
+  const out = [];
   const noAttack = members.filter((m) => m.rarity !== 'UR' && !roster[m.id]?.attack);
   if (noAttack.length) {
     out.push(`Атака оценена по уровню у: ${noAttack.map((m) => m.name || m.id).join(', ')}. Впишите её из окна «Повышение навыка» — расчёт станет точнее.`);
   }
-  out.push('Сколько осколков придёт до конца Синистрии — оценка по уровню доната.');
   if (talentsPlan?.openCostApprox) out.push('Цена открытия нового таланта (с 0 на 1) не измерена — взята цена первого шага.');
   if (talentsPlan?.unknownPrices?.length) out.push(`Цены выше 2-го уровня не известны у: ${talentsPlan.unknownPrices.join(', ')}.`);
   return out;

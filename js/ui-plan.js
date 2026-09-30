@@ -41,6 +41,6 @@ export function renderPlan(root, state, go, persist) {
     plan.untouched.length ? [h('h3', {}, 'Кого не трогать'),
       h('p', {}, plan.untouched.map((u) => u.name).join(', ')),
       h('p', { class: 'muted' }, 'Ресурсы в них — это ресурсы, которых не хватит пятёрке.')] : null,
-    h('h3', {}, 'Оговорки'), h('ul', { class: 'muted' }, plan.disclaimers.map((d) => h('li', {}, d))),
+    plan.disclaimers.length ? [h('h3', {}, 'Оговорки'), h('ul', { class: 'muted' }, plan.disclaimers.map((d) => h('li', {}, d)))] : null,
     buttons);
 }
