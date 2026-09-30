@@ -111,25 +111,47 @@ export function findSquad(profile, fetches) {
 
   const ur = profile.ur && byId[profile.ur] ? byId[profile.ur] : null;
   const slots = ur ? 4 : 5;
-  const size = Math.min(slots, pool.length);
   const withUR = (rg) => (ur ? { ...rg, R: [Math.max(0, rg.R[0] - 1), rg.R[1]] } : rg);
   const ranges = withUR(compositionRanges(profile.quiz, 5));
   // Каких редкостей меньше, чем нужно по рамкам: сколько просили и сколько есть.
   const missing = RARITIES.map((r) => ({ rarity: r, need: ranges[r][0], have: pool.filter((f) => f.rarity === r).length }))
     .filter((x) => x.have < x.need);
-  let list = combos(pool, size, ranges);
-  if (list.length === 0) list = combos(pool, size, withUR(compositionRanges(profile.quiz, 5, true)));
+  // Места редкости, которой ещё нет, остаются пустыми: других на них не ставим, чтобы игрок не вкладывался
+  // в тех, кто в финальную пачку не войдёт (владелец, 01.10.2026). Имеющиеся нужной редкости — берём.
+  const waiting = missing.map((x) => ({ rarity: x.rarity, count: x.need - x.have }));
+  const empty = waiting.reduce((sum, x) => sum + x.count, 0);
+  const size = Math.min(slots - empty, pool.length);
+  const fitted = Object.fromEntries(RARITIES.map((r) => {
+    const m = missing.find((x) => x.rarity === r);
+    return [r, m ? [m.have, m.have] : ranges[r]];
+  }));
+  let list = size > 0 ? combos(pool, size, fitted) : [];
+  if (list.length === 0 && empty === 0) list = combos(pool, size, withUR(compositionRanges(profile.quiz, 5, true)));
   let relaxed = false;
+  let fillAll = false;
   if (list.length === 0) {
+    // Из просимого состава нет никого — совсем без прокачки нельзя (задания не пройти):
+    // берём самых полезных из имеющихся, а пересобрать пачку попросим, когда выпадут нужные.
     relaxed = true;
-    list = combos(pool, size, { SSR: [0, size], SR: [0, size], R: [0, size] });
+    fillAll = size <= 0;
+    const n = fillAll ? Math.min(slots, pool.length) : size;
+    list = combos(pool, n, { SSR: [0, n], SR: [0, n], R: [0, n] });
   }
+  const realSize = fillAll ? Math.min(slots, pool.length) : size;
 
   const b = budget(profile);
+  const day = Number(profile.day) || 1;
+  // «Будущий» Двойник на пустом месте: только удар, без своих бафов. Нужен, чтобы из имеющихся выбрать тех,
+  // кто усилит будущую пачку. Не качается и в план не выводится.
+  const placeholders = fillAll ? [] : waiting.flatMap((x) => Array.from({ length: x.count }, (_, k) => ({
+    ...projectMember({ id: `__wait_${x.rarity}_${k}`, rarity: x.rarity, type: null, skills: ['cursed_echoes'] },
+      { level: 1, skillLevels: [1] }, donation, 0, day),
+    locked: true, placeholder: true,
+  })));
   const build = (fs) => {
-    const ms = fs.map((f) => projectMember(f, profile.roster[f.id], donation, b.namedFor(f.id), Number(profile.day) || 1));
+    const ms = fs.map((f) => projectMember(f, profile.roster[f.id], donation, b.namedFor(f.id), day));
     if (ur) ms.push(urMember(ur, ms));
-    return ms;
+    return [...ms, ...placeholders];
   };
   const q = QUICK_SKILL_LEVEL[donation] || QUICK_SKILL_LEVEL.none;
   const quick = list.map((fs) => {
@@ -140,7 +162,7 @@ export function findSquad(profile, fetches) {
   const full = (fs) => {
     const start = build(fs);
     const result = allocate({ members: start, universal: b.universal }, role);
-    return { ids: start.map((m) => m.id), start, result, score: result.score };
+    return { ids: start.filter((m) => !m.placeholder).map((m) => m.id), start, result, score: result.score };
   };
   const ranked = quick.map(({ fs }) => full(fs)).sort((x, y) => y.score - x.score);
   let chosen = ranked[0];
@@ -150,7 +172,7 @@ export function findSquad(profile, fetches) {
   let switched = null;
   const prevIds = (profile.lastPlan?.squad || []).filter((id) => byId[id] && byId[id].rarity !== 'UR');
   // Прежнюю пачку сравниваем, только если она того же размера (иначе взятый UR дал бы шестерых).
-  if (prevIds.length === size && prevIds.every((id) => profile.roster[id]?.have)) {
+  if (prevIds.length === realSize && prevIds.every((id) => profile.roster[id]?.have)) {
     const mine = chosen.ids.filter((id) => byId[id].rarity !== 'UR');
     if (!sameSet(mine, prevIds)) {
       const prev = ranked.find((x) => sameSet(x.ids.filter((id) => byId[id].rarity !== 'UR'), prevIds))
@@ -165,7 +187,8 @@ export function findSquad(profile, fetches) {
   if (ur) nowMembers.push(urMember(ur, nowMembers));
 
   return {
-    empty: false, relaxed, kept, switched, size, missing: relaxed || size < slots ? missing : [],
+    empty: false, relaxed, kept, switched, size: realSize, waiting, fillAll,
+    missing: relaxed || realSize < slots ? missing : [],
     // «Что качать сейчас» — только по нынешним ресурсам и открытым сейчас навыкам.
     now: allocate({ members: nowMembers, universal: { R: 0, SR: 0, SSR: 0, ...profile.universal } }, role),
     chosen: { ids: chosen.ids, members: chosen.result.members, result: chosen.result },

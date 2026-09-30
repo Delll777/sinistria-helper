@@ -12,7 +12,21 @@ export function initAll(data) {
   values.init(data.skills);
 }
 
+function waitingText(found) {
+  if (!found.waiting.length) return null;
+  const n = found.size;
+  const who = `${n} ${n === 1 ? 'Двойник' : n < 5 ? 'Двойника' : 'Двойников'}`;
+  const need = found.waiting.map((x) => `${x.rarity} — ${x.count} ${x.count === 1 ? 'место' : x.count < 5 ? 'места' : 'мест'}`).join(', ');
+  if (found.fillAll) {
+    return `Из просимого состава пока никого нет (ждём: ${need}). Чтобы проходить задания, качайте тех, кто ниже, — `
+      + 'это временная замена. Когда выпадут нужные Двойники, нажмите «Пересчитать пачку».';
+  }
+  return `В пачке пока ${who}. Ждём: ${need}. Пока качайте только тех, кто ниже, — они войдут в финальную пачку. `
+    + 'Когда выпадет нужный Двойник, нажмите «Пересчитать пачку».';
+}
+
 function relaxedText(found) {
+  if (found.waiting.length) return found.relaxed && !found.fillAll ? 'Нужного состава из того, что у вас есть, не собрать — взяли лучший из возможных.' : null;
   const parts = [];
   if (found.size < 5) parts.push(`У вас ${found.size} ${found.size === 1 ? 'Двойник' : found.size < 5 ? 'Двойника' : 'Двойников'} для пачки — пятёрка неполная.`);
   if (found.missing.length) {
@@ -46,7 +60,7 @@ export function buildPlan(profile, data) {
   const leaders = universalLeaders(result);
   const nameOf = (id) => byId[id].nameRu;
 
-  const squad = result.members.map((m) => {
+  const squad = result.members.filter((m) => !m.placeholder).map((m) => {
     const s = sum[m.id];
     const skillsView = m.skills.map((id, i) => ({
       slot: i, skillId: id, name: names[id], text: values.describe(id, m.rarity, Math.max(m.levels[i], 1)),
@@ -88,8 +102,7 @@ export function buildPlan(profile, data) {
     .filter(([id, o]) => o?.have && byId[id] && !inSquad.has(id))
     .map(([id]) => ({ id, name: nameOf(id) }));
 
-
-  const membersNamed = result.members.map((m) => ({ ...m, name: nameOf(m.id) }));
+  const membersNamed = result.members.filter((m) => !m.placeholder).map((m) => ({ ...m, name: nameOf(m.id) }));
   return {
     ok: true,
     squadIds: found.chosen.ids,
@@ -97,6 +110,7 @@ export function buildPlan(profile, data) {
     switchedText: found.switched ? `Пачка сменилась: новая сильнее прежней примерно на ${Math.round(found.switched.gain * 100)} %.` : null,
     keptText: found.kept ? 'Оставляем прежнюю пачку: другие варианты сильнее меньше чем на 5 %, а вложенное в неё пропало бы.' : null,
     relaxedText: relaxedText(found),
+    waitingText: waitingText(found),
     runnerUp: found.runnerUp ? found.runnerUp.ids.map(nameOf) : null,
     typeText: (() => {
       const t = typeBonus(result.members);

@@ -13,7 +13,7 @@ export function renderPlan(root, state, go, persist) {
     return;
   }
 
-  const notes = [plan.keptText, plan.switchedText, plan.relaxedText].filter(Boolean);
+  const notes = [plan.waitingText, plan.keptText, plan.switchedText, plan.relaxedText].filter(Boolean);
   const typeLine = plan.typeText ? h('p', { class: 'muted' }, plan.typeText) : null;
   const member = (m) => h('div', { class: 'card member' },
     h('div', { class: 'row' }, portrait(byId[m.id]),

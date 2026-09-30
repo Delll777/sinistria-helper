@@ -63,7 +63,9 @@ button:disabled { opacity: .45; }
 .portrait.noimg.r-SSR { border-color: #b3303f; } .portrait.noimg.r-UR { border-color: #2f6f9e; }
 .pic-label { font-size: 10px; line-height: 1.1; text-align: center; padding: 2px; overflow-wrap: anywhere; }
 label { display: grid; gap: 4px; margin: 6px 0; }
-label.res { grid-template-columns: auto 1fr; align-items: center; }
+label.res { grid-template-columns: auto 1fr; align-items: center; column-gap: 8px; }
+/* Значок и подпись — в одну строку, поле ввода — под ними на всю ширину. */
+label.res input { grid-column: 1 / -1; }
 input[type=number] { font: inherit; padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); width: 100%; min-width: 0; }
 .skills-in, .talents-in { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
 details { margin: 12px 0; }
