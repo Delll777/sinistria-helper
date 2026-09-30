@@ -2,6 +2,7 @@
 import * as skills from './calc-skills.js';
 import * as values from './skill-values.js';
 import { findSquad } from './squad.js';
+import { typeBonus } from './score.js';
 import { summarize, universalLeaders } from './allocate.js';
 import { talentPlan } from './talents-plan.js';
 import { gapLine, colorTo, slotName, shareOf, memberReasons, warnings, disclaimers } from './explain.js';
@@ -14,7 +15,10 @@ export function initAll(data) {
 function relaxedText(found) {
   const parts = [];
   if (found.size < 5) parts.push(`У вас ${found.size} ${found.size === 1 ? 'Двойник' : found.size < 5 ? 'Двойника' : 'Двойников'} для пачки — пятёрка неполная.`);
-  if (found.missing.length) parts.push(`Нет ${found.missing.join(' и ')} — взяли тех, кто есть.`);
+  if (found.missing.length) {
+    const lines = found.missing.map((x) => (x.have === 0 ? `нет ${x.rarity}` : `не хватает ${x.rarity}: просили ${x.need}, есть ${x.have}`));
+    parts.push(`${lines.join('; ')} — взяли тех, кто есть.`.replace(/^./, (c) => c.toUpperCase()));
+  }
   else if (found.relaxed) parts.push('Нужного состава из того, что у вас есть, не собрать — взяли лучший из возможных.');
   return parts.length ? parts.join(' ') : null;
 }
@@ -74,7 +78,9 @@ export function buildPlan(profile, data) {
     if (last && last.id === st.id && last.slot === st.slot && last.to === st.from) last.to = st.to;
     else merged.push({ ...st });
   }
-  const now = merged.slice(0, 4).map((st) =>
+  const now = merged.length === 0
+    ? ['Осколков на руках пока нет — качать нечем. Когда появятся, вкладывайте по порядку ниже.']
+    : merged.slice(0, 4).map((st) =>
     `${nameOf(st.id)} — ${slotName(st.slot)} навык с ${st.from} до ${st.to} (${colorTo(st.to).replace(/ого$/, 'ый').replace(/его$/, 'ий')} цвет)`);
 
   const inSquad = new Set(found.chosen.ids);
@@ -96,6 +102,10 @@ export function buildPlan(profile, data) {
     keptText: found.kept ? 'Оставляем прежнюю пачку: другие варианты сильнее меньше чем на 5 %, а вложенное в неё пропало бы.' : null,
     relaxedText: relaxedText(found),
     runnerUp: found.runnerUp ? found.runnerUp.ids.map(nameOf) : null,
+    typeText: (() => {
+      const t = typeBonus(result.members);
+      return t.bonus ? `${t.count} ${t.count === 5 ? 'Двойников' : 'Двойника'} одного типа — Атака +${Math.round(t.bonus * 100)} % всему отряду.` : null;
+    })(),
     now, squad,
     universal: Object.fromEntries(Object.entries(leaders).map(([r, id]) => [r, id ? nameOf(id) : null])),
     untouched,

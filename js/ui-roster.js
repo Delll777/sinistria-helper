@@ -56,7 +56,7 @@ export function renderRoster(root, state, go, persist) {
 
   mount(root, 
     h('h2', {}, 'Двойники и ресурсы'),
-    h('label', { class: 'res' }, 'День Синистрии', numberInput(p.day, (v) => set(() => { p.day = v; }), { min: 1, max: 14 })),
+    h('label', { class: 'res' }, 'Какой сейчас день Синистрии? (от 1 до 14)', numberInput(p.day, (v) => set(() => { p.day = v; }), { min: 1, max: 14 })),
     h('h3', {}, 'Кто у вас есть'), h('p', { class: 'muted' }, 'Нажмите на портрет, чтобы отметить.'), grid, details,
     h('h3', {}, 'UR'), urBlock,
     h('h3', {}, 'Ресурсы'), shards,

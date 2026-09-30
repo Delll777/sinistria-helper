@@ -16,6 +16,7 @@ export function renderPlan(root, state, go, persist) {
   }
 
   const notes = [plan.keptText, plan.switchedText, plan.relaxedText].filter(Boolean);
+  const typeLine = plan.typeText ? h('p', { class: 'muted' }, plan.typeText) : null;
   const member = (m) => h('div', { class: 'card member' },
     h('div', { class: 'row' }, portrait(byId[m.id]),
       h('div', {}, h('b', {}, m.name), h('div', { class: 'muted' }, `${m.rarity} · вклад в силу отряда ~${Math.round(m.share * 100)} %`))),
@@ -38,7 +39,7 @@ export function renderPlan(root, state, go, persist) {
     notes.length ? h('div', { class: 'card note' }, notes.map((n) => h('p', {}, n))) : null,
     plan.warnings.length ? h('div', { class: 'card warn' }, plan.warnings.map((w) => h('p', {}, w))) : null,
     h('h3', {}, 'Что качать прямо сейчас'), h('ol', {}, plan.now.map((s) => h('li', {}, s))),
-    h('h3', {}, 'Пятёрка'), plan.squad.map(member),
+    h('h3', {}, 'Пятёрка'), typeLine, plan.squad.map(member),
     plan.runnerUp ? h('p', { class: 'muted' }, `Почти так же силён запасной вариант: ${plan.runnerUp.join(', ')}.`) : null,
     uni.length ? [h('h3', {}, 'Кому отдавать общие осколки'), h('ul', {}, uni)] : null,
     h('h3', {}, 'Таланты'),

@@ -59,12 +59,17 @@ export function budget(profile) {
   return { universal, namedFor };
 }
 
-export function projectMember(f, owned, donation, namedTotal) {
+// Уровень к концу раунда: от текущего к потолку по донату — тем меньше, чем меньше дней осталось
+// (на 12-й день Двойник 40 ур. уже не догонит того, в кого вложен весь раунд).
+export function projectMember(f, owned, donation, namedTotal, day = 1) {
   const proj = PROJECTED_LEVEL[donation] || PROJECTED_LEVEL.none;
   const cur = f.skills.map((_, i) => owned?.skillLevels?.[i] || 0);
-  const level = Math.max(owned?.level || 1, proj[f.rarity] || proj.SSR);
+  const now = owned?.level || 1;
+  const cap = proj[f.rarity] || proj.SSR;
+  const share = (ROUND_DAYS - clamp(day, 1, ROUND_DAYS)) / (ROUND_DAYS - 1);
+  const level = Math.round(now + Math.max(0, cap - now) * share);
   return {
-    id: f.id, rarity: f.rarity, skills: f.skills, level, named: namedTotal,
+    id: f.id, rarity: f.rarity, type: f.type, skills: f.skills, level, named: namedTotal,
     levels: f.skills.map((_, i) => (level >= SLOT_OPEN_LEVEL[i] ? Math.max(cur[i], 1) : 0)),
     entered: owned?.attack || null,
     enteredAt: owned?.attack ? { level: owned.level || 1, levels: cur } : null,
@@ -75,7 +80,7 @@ function urMember(ur, members) {
   const ssr = members.filter((m) => m.rarity === 'SSR').sort((a, b) => b.level - a.level)[0];
   const donor = ssr || [...members].sort((a, b) => b.level - a.level)[0];
   return {
-    id: ur.id, rarity: 'UR', skills: ur.skills, level: donor ? donor.level : 1, named: 0,
+    id: ur.id, rarity: 'UR', type: ur.type, skills: ur.skills, level: donor ? donor.level : 1, named: 0,
     levels: ur.skills.map(() => 1), entered: null, enteredAt: null, locked: true,
     mirrorOf: donor ? donor.id : undefined,
   };
@@ -86,7 +91,7 @@ function currentMember(f, owned) {
   const level = owned?.level || 1;
   const cur = f.skills.map((_, i) => owned?.skillLevels?.[i] || 0);
   return {
-    id: f.id, rarity: f.rarity, skills: f.skills, level, named: owned?.named || 0,
+    id: f.id, rarity: f.rarity, type: f.type, skills: f.skills, level, named: owned?.named || 0,
     levels: cur.map((l, i) => (l >= 1 || level >= SLOT_OPEN_LEVEL[i] ? Math.max(l, 1) : 0)),
     entered: owned?.attack || null,
     enteredAt: owned?.attack ? { level, levels: cur } : null,
@@ -109,7 +114,9 @@ export function findSquad(profile, fetches) {
   const size = Math.min(slots, pool.length);
   const withUR = (rg) => (ur ? { ...rg, R: [Math.max(0, rg.R[0] - 1), rg.R[1]] } : rg);
   const ranges = withUR(compositionRanges(profile.quiz, 5));
-  const missing = RARITIES.filter((r) => pool.filter((f) => f.rarity === r).length < ranges[r][0]);
+  // Каких редкостей меньше, чем нужно по рамкам: сколько просили и сколько есть.
+  const missing = RARITIES.map((r) => ({ rarity: r, need: ranges[r][0], have: pool.filter((f) => f.rarity === r).length }))
+    .filter((x) => x.have < x.need);
   let list = combos(pool, size, ranges);
   if (list.length === 0) list = combos(pool, size, withUR(compositionRanges(profile.quiz, 5, true)));
   let relaxed = false;
@@ -120,7 +127,7 @@ export function findSquad(profile, fetches) {
 
   const b = budget(profile);
   const build = (fs) => {
-    const ms = fs.map((f) => projectMember(f, profile.roster[f.id], donation, b.namedFor(f.id)));
+    const ms = fs.map((f) => projectMember(f, profile.roster[f.id], donation, b.namedFor(f.id), Number(profile.day) || 1));
     if (ur) ms.push(urMember(ur, ms));
     return ms;
   };

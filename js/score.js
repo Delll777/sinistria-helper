@@ -2,7 +2,7 @@
 // Урон = Атака × (обычные атаки + удары навыков) — произведение, поэтому усилители без
 // источников урона ничего не дают, и наоборот (принцип 8 владельца).
 import { SITUATIONS, ROLE_WEIGHTS, ROLE_SURVIVAL, SURVIVAL_POWER, INCOMING_SHARE, MAX_REDUCTION,
-  STRIKE_EVERY, CAPACITY_POWER, NORMAL_ATTACK_FACTOR } from './weights.js';
+  STRIKE_EVERY, CAPACITY_POWER, NORMAL_ATTACK_FACTOR, TYPE_BONUS } from './weights.js';
 import { catalog, valueAt, worksIn } from './skill-values.js';
 
 const round4 = (x) => Math.round(x * 1e4) / 1e4;
@@ -49,8 +49,19 @@ export function situationValue(members, situation, role = null) {
   return offense * Math.pow(survival, SURVIVAL_POWER[situation] * roleK);
 }
 
+// Наибольшее число Двойников одного типа в пачке (UR тоже считается) и бонус к Атаке за него.
+export function typeBonus(members) {
+  const count = {};
+  for (const m of members) if (m.type) count[m.type] = (count[m.type] || 0) + 1;
+  const best = Math.max(0, ...Object.values(count));
+  const type = Object.keys(count).find((t) => count[t] === best) || null;
+  return { type, count: best, bonus: TYPE_BONUS[best] || 0 };
+}
+
 export function squadScore(members, role) {
   const w = ROLE_WEIGHTS[role];
+  const k = 1 + typeBonus(members).bonus;
+  if (k !== 1) members = members.map((m) => ({ ...m, attack: m.attack * k }));
   let s = 0;
   for (const sit of SITUATIONS) if (w[sit]) s += w[sit] * situationValue(members, sit, role);
   return s;
