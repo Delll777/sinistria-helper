@@ -29,24 +29,44 @@ export function squadBuffs(members, situation) {
   return b;
 }
 
-export function situationValue(members, situation, role = null) {
+// Ситуация = Σ (Атака каждого × его вклад) × общий множитель отряда. Вклад — обычные атаки и свои удары
+// с бафами отряда; множитель — урон по игрокам/защитникам, вместимость и живучесть.
+function situationFactors(members, situation, role) {
   const b = squadBuffs(members, situation);
-  let damage = 0;
-  for (const m of members) {
+  const coef = members.map((m) => {
     let strikes = 0;
     m.skills.forEach((id, i) => {
       if (catalog(id).kind === 'strike' && worksIn(id, situation)) {
         strikes += valueAt(id, m.rarity, m.levels[i]) / 100 / STRIKE_EVERY;
       }
     });
-    damage += m.attack * (NORMAL_ATTACK_FACTOR * (1 + b.normal) + strikes * (1 + b.skill));
-  }
-  const offense = damage * (1 + b.vs) * Math.pow(1 + b.capacity, CAPACITY_POWER);
+    return NORMAL_ATTACK_FACTOR * (1 + b.normal) + strikes * (1 + b.skill);
+  });
   const rn = Math.min(MAX_REDUCTION, b.normalRed);
   const rk = Math.min(MAX_REDUCTION, b.skillRed);
   const survival = 1 / (INCOMING_SHARE.normal * (1 - rn) + INCOMING_SHARE.skill * (1 - rk));
   const roleK = role ? ROLE_SURVIVAL[role] ?? 1 : 1;
-  return offense * Math.pow(survival, SURVIVAL_POWER[situation] * roleK);
+  const mult = (1 + b.vs) * Math.pow(1 + b.capacity, CAPACITY_POWER) * Math.pow(survival, SURVIVAL_POWER[situation] * roleK);
+  return { coef, mult };
+}
+
+export function situationValue(members, situation, role = null) {
+  const { coef, mult } = situationFactors(members, situation, role);
+  return members.reduce((s, m, i) => s + m.attack * coef[i], 0) * mult;
+}
+
+// Оценка отряда линейна по Атакам: squadScore = Σ Атака_i × вклад_i. Нужно, чтобы быстро сравнивать
+// расклады ступеней (levels.bestAssignment), не пересчитывая всю оценку.
+export function attackWeights(members, role) {
+  const w = ROLE_WEIGHTS[role];
+  const k = 1 + typeBonus(members).bonus;
+  const out = members.map(() => 0);
+  for (const sit of SITUATIONS) {
+    if (!w[sit]) continue;
+    const { coef, mult } = situationFactors(members, sit, role);
+    coef.forEach((c, i) => { out[i] += w[sit] * mult * c * k; });
+  }
+  return out;
 }
 
 // Наибольшее число Двойников одного типа в пачке (UR тоже считается) и бонус к Атаке за него.

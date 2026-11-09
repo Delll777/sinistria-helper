@@ -1,10 +1,11 @@
 // Выбор пятёрки: перебор всех составов из того, что есть у игрока, быстрый отбор,
 // затем подробный расчёт с распределением осколков. Шаблонов нет.
-import { DEFAULT_COMPOSITION, PROJECTED_LEVEL, DAILY_UNIVERSAL, ROUND_DAYS, SLOT_OPEN_LEVEL,
-  QUICK_SKILL_LEVEL, SHORTLIST, KEEP_MARGIN, RUNNER_UP_MARGIN, ORDER_SHARDS, NAMED_FUTURE_SHARE, INVESTED_LEVEL } from './weights.js';
-import { allocate } from './allocate.js';
-import { squadScore } from './score.js';
-import { attackOf } from './attack.js';
+import { DEFAULT_COMPOSITION, DAILY_UNIVERSAL, ROUND_DAYS, SLOT_OPEN_LEVEL, SSR_LEVEL_CAP, MAX_LEVEL,
+  SHORTLIST, KEEP_MARGIN, RUNNER_UP_MARGIN, ORDER_SHARDS, NAMED_FUTURE_SHARE, INVESTED_LEVEL } from './weights.js';
+import { allocate, quickLevels } from './allocate.js';
+import { attackWeights } from './score.js';
+import { attackAtLevel } from './attack.js';
+import { ladderFor, bestAssignment } from './levels.js';
 
 const RARITIES = ['SSR', 'SR', 'R'];
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
@@ -59,21 +60,48 @@ export function budget(profile) {
   return { universal, namedFor };
 }
 
-// Уровень к концу раунда: от текущего к потолку по донату — тем меньше, чем меньше дней осталось
-// (на 12-й день Двойник 40 ур. уже не догонит того, в кого вложен весь раунд).
-export function projectMember(f, owned, donation, namedTotal, day = 1) {
-  const proj = PROJECTED_LEVEL[donation] || PROJECTED_LEVEL.none;
+// Двойник на итоговом уровне level: навыки — нынешние, открытые к этому уровню — с 1-го.
+function memberAt(f, owned, level, named) {
   const cur = f.skills.map((_, i) => owned?.skillLevels?.[i] || 0);
-  const now = owned?.level || 1;
-  const cap = proj[f.rarity] || proj.SSR;
-  const share = (ROUND_DAYS - clamp(day, 1, ROUND_DAYS)) / (ROUND_DAYS - 1);
-  const level = Math.round(now + Math.max(0, cap - now) * share);
   return {
-    id: f.id, rarity: f.rarity, type: f.type, skills: f.skills, level, named: namedTotal,
+    id: f.id, rarity: f.rarity, type: f.type, skills: f.skills, level, named,
     levels: f.skills.map((_, i) => (level >= SLOT_OPEN_LEVEL[i] ? Math.max(cur[i], 1) : 0)),
     entered: owned?.attack || null,
     enteredAt: owned?.attack ? { level: owned.level || 1, levels: cur } : null,
   };
+}
+
+// Уровни пачки к концу раунда (владелец, 09.11.2026): ступени лесенки по донату раздаются так, чтобы пачка
+// была сильнее, с учётом уже вложенных искр и оставшихся дней (levels.js). parts — Двойники пачки без UR,
+// «будущие» Двойники на пустых местах — в конце. UR в лесенку не входит: он на уровне лучшего SSR.
+// quick — оценка пачки на этих уровнях при навыках быстрой прикидки (оценка линейна по Атакам).
+function projectSquad(parts, { donation, day, role, universal, ur }) {
+  const nReal = parts.filter((p) => !p.extra?.placeholder).length;
+  const now = parts.map((p) => p.owned?.level || 1);
+  const steps = ladderFor(donation, parts.length, parts.filter((p) => p.f.rarity === 'SSR').length);
+  const assemble = (levels) => {
+    const ms = parts.map((p, i) => ({ ...memberAt(p.f, p.owned, levels[i], p.named), ...p.extra }));
+    const real = ms.slice(0, nReal);
+    return ur ? [...real, urMember(ur, real), ...ms.slice(nReal)] : ms;
+  };
+  // Вклад Атаки каждого — на пробном раскладе «кто выше сейчас, тот и выше».
+  const trial = new Array(parts.length);
+  now.map((_, i) => i).sort((a, b) => now[b] - now[a]).forEach((i, k) => { trial[i] = Math.max(now[i], steps[k]); });
+  const sample = quickLevels(assemble(trial), role, universal);
+  const atk = sample.map((m) => attackAtLevel(m));
+  const w = attackWeights(sample.map((m, i) => ({ ...m, attack: atk[i](m.level) })), role);
+  const at = (i) => (ur && i >= nReal ? i + 1 : i);
+  const ssr = parts.map((_, i) => i).filter((i) => i < nReal && parts[i].f.rarity === 'SSR');
+  const donorLevel = (levels) => Math.max(1, ...(ssr.length ? ssr : levels.slice(0, nReal).map((_, i) => i)).map((i) => levels[i]));
+  const value = (levels) => levels.reduce((v, l, i) => v + w[at(i)] * atk[at(i)](l), 0)
+    + (ur ? w[nReal] * atk[nReal](donorLevel(levels)) : 0);
+  // Потолок SSR; SSR уже выше потолка — исключительный случай (владелец): его потолок не держит.
+  const ssrCap = SSR_LEVEL_CAP[donation] || SSR_LEVEL_CAP.none;
+  const caps = parts.map((p, i) => (p.f.rarity === 'SSR' && now[i] <= ssrCap ? ssrCap : MAX_LEVEL));
+  // Главная ступень — у SR: за их Вознесение дают рейтинг, за R нет (владелец, 09.11.2026).
+  const mayTop = parts.map((p) => p.f.rarity === 'SR');
+  const levels = bestAssignment(now, steps, day, value, caps, mayTop);
+  return { members: assemble(levels), quick: value(levels) };
 }
 
 function urMember(ur, members) {
@@ -152,22 +180,17 @@ export function findSquad(profile, fetches) {
   const b = budget(profile);
   const day = Number(profile.day) || 1;
   // «Будущий» Двойник на пустом месте: только удар, без своих бафов. Нужен, чтобы из имеющихся выбрать тех,
-  // кто усилит будущую пачку. Не качается и в план не выводится.
-  const placeholders = fillAll ? [] : waiting.flatMap((x) => Array.from({ length: x.count }, (_, k) => ({
-    ...projectMember({ id: `__wait_${x.rarity}_${k}`, rarity: x.rarity, type: null, skills: ['cursed_echoes'] },
-      { level: 1, skillLevels: [1] }, donation, 0, day),
-    locked: true, placeholder: true,
+  // кто усилит будущую пачку. Занимает свою ступень лесенки, не качается и в план не выводится.
+  const waitParts = fillAll ? [] : waiting.flatMap((x) => Array.from({ length: x.count }, (_, k) => ({
+    f: { id: `__wait_${x.rarity}_${k}`, rarity: x.rarity, type: null, skills: ['cursed_echoes'] },
+    owned: { level: 1, skillLevels: [1] }, named: 0, extra: { locked: true, placeholder: true },
   })));
-  const build = (fs) => {
-    const ms = fs.map((f) => projectMember(f, profile.roster[f.id], donation, b.namedFor(f.id), day));
-    if (ur) ms.push(urMember(ur, ms));
-    return [...ms, ...placeholders];
-  };
-  const q = QUICK_SKILL_LEVEL[donation] || QUICK_SKILL_LEVEL.none;
-  const quick = list.map((fs) => {
-    const ms = build(fs).map((m) => ({ ...m, levels: m.levels.map((l) => (l ? Math.max(l, q) : 0)) }));
-    return { fs, score: squadScore(ms.map((m) => ({ ...m, attack: attackOf(m) })), role) };
-  }).sort((x, y) => y.score - x.score).slice(0, SHORTLIST);
+  const project = (fs) => projectSquad([
+    ...fs.map((f) => ({ f, owned: profile.roster[f.id], named: b.namedFor(f.id) })), ...waitParts,
+  ], { donation, day, role, universal: b.universal, ur });
+  const build = (fs) => project(fs).members;
+  const quick = list.map((fs) => ({ fs, score: project(fs).quick }))
+    .sort((x, y) => y.score - x.score).slice(0, SHORTLIST);
 
   const full = (fs) => {
     const start = build(fs);

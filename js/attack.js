@@ -35,14 +35,24 @@ export function skillGain(rarity, levels) {
   return levels.reduce((s, l) => s + (l >= 1 ? gainBetween(1, l, rar(rarity)).attack : 0), 0);
 }
 
+// Атака того же Двойника на любом уровне (навыки те же) — для перебора ступеней.
 // Если игрок вписал Атаку из карточки, кривая масштабируется под его аккаунт
 // (у всех свои Алтарь и прочие прибавки). Вписанное меньше прибавок навыков — мусор, игнорируем.
-export function attackOf({ rarity, level, levels, entered = null, enteredAt = null }) {
-  let base = baseAttack(rarity, level);
+export function attackAtLevel({ rarity, levels, entered = null, enteredAt = null }) {
+  const gain = skillGain(rarity, levels);
+  let scale = 1;
   if (entered && enteredAt) {
     const baseNow = entered - skillGain(rarity, enteredAt.levels);
     const curveNow = baseAttack(rarity, enteredAt.level);
-    if (baseNow > 0 && curveNow > 0) base = Math.round((base * baseNow) / curveNow);
+    if (baseNow > 0 && curveNow > 0) scale = baseNow / curveNow;
   }
-  return base + skillGain(rarity, levels);
+  const memo = new Map();
+  return (level) => {
+    if (!memo.has(level)) memo.set(level, Math.round(baseAttack(rarity, level) * scale) + gain);
+    return memo.get(level);
+  };
+}
+
+export function attackOf(m) {
+  return attackAtLevel(m)(m.level);
 }

@@ -66,6 +66,36 @@ function mirror(ms) {
   }
 }
 
+// Сколько уровней навыка от from даст запас осколков shards.
+function reachable(from, shards) {
+  let l = from;
+  let left = shards;
+  while (l < MAX) {
+    const c = costBetween(l, l + 1);
+    if (c > left) break;
+    left -= c;
+    l += 1;
+  }
+  return l;
+}
+
+// Быстрая прикидка пятёрки без пошагового расчёта: общие осколки редкости — поровну её Двойникам пачки,
+// плюс свои; запас Двойника — поровну его нужным роли навыкам. Ненужные не качаются (как и в подробном
+// расчёте). UR повторяет своего SSR, «будущий» Двойник и UR сами не качаются.
+export function quickLevels(members, role, universal = {}) {
+  const ms = members.map((m) => ({ ...m, levels: [...m.levels] }));
+  const free = ms.filter((m) => !m.locked);
+  for (const m of free) {
+    const slots = m.levels.map((_, i) => i).filter((i) => m.levels[i] >= 1 && usefulSlot(m, i, role, ms));
+    if (!slots.length) continue;
+    const same = free.filter((x) => x.rarity === m.rarity).length;
+    const per = ((m.named || 0) + (universal[m.rarity] || 0) / same) / slots.length;
+    for (const i of slots) m.levels[i] = reachable(m.levels[i], per);
+  }
+  mirror(ms);
+  return ms;
+}
+
 function scoreOf(ms, role) {
   mirror(ms);
   return squadScore(ms.map((m) => ({ ...m, attack: attackOf(m) })), role);
